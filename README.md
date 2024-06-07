@@ -12,9 +12,8 @@ Laravel, PostgreSQL, Nginx.
 
 ## Description
 
-ISBN is used as primary key for books table.
-Both ISBN-10 and ISBN-13 are acceptable.
-Before a book is being saved, its ISBN is being validated.
+ISBN is used as primary key for books table. Both ISBN-10 and ISBN-13 are acceptable.
+Before a book is saved, its ISBN is validated.
 
 Thumbnails for new books are saved using GoogleBooks API.
 Authorization process uses Laravel Sanctum.

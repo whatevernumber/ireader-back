@@ -48,7 +48,7 @@ class IsbnHelper
             $result = 0;
         } else if ($result === 10) {
             // depends on the format of ISBN 10 turns to 'X' or 0
-            $divider === 11 ? $result = 'X' : $result = 0;
+            $divider === self::DIVIDER_10 ? $result = 'X' : $result = 0;
         }
 
         // check if the last digit is valid
@@ -58,7 +58,7 @@ class IsbnHelper
     /**
      * Calculates the sum for ISBN-10 or ISBN-13 numbers
      * @param array $numbers - array of numbers
-     * @param int $count
+     * @param int $count - number of digits
      * @return int - sum of the numbers
      */
     private function getIsbnSum(array $numbers, int $count): int
