@@ -22,9 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo('/api/books');
     })
-    ->withMiddleware(function (Middleware $middleware) {
-        //
-    })
+//    ->withMiddleware(function (Middleware $middleware) {
+//        //
+//    })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
