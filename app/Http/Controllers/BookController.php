@@ -296,18 +296,6 @@ class BookController extends Controller
 
         $books = Book::with('authors', 'genres');
 
-        if ($genre) {
-            $books = $books->whereHas('genres', function ($q) use ($genre) {
-                $q->where('value', $genre);
-            });
-        }
-
-        if ($author) {
-            $books = $books->whereHas('authors', function ($q) use ($author) {
-               $q->where('name', 'ILIKE', '%' . $author . '%');
-            });
-        }
-
         if ($text) {
             $books = $books->where('title', 'ILIKE', '%' . $text . '%');
 
@@ -317,6 +305,18 @@ class BookController extends Controller
                     $q->where('name', 'ILIKE', '%' . $text . '%');
                 });
             }
+        }
+
+        if ($genre) {
+            $books = $books->whereHas('genres', function ($q) use ($genre) {
+                $q->where('value', $genre);
+            });
+        }
+
+        if ($author) {
+            $books = $books->whereHas('authors', function ($q) use ($author) {
+                $q->where('name', 'ILIKE', '%' . $author . '%');
+            });
         }
 
         $books = $books->paginate(env('BOOKS_PER_PAGE'));

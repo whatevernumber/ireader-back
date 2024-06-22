@@ -15,7 +15,7 @@ class PurchaseController extends Controller
 {
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return BookResource::collection($request->user()->purchases()->paginate(env('BOOKS_PER_PAGE')));
+        return BookResource::collection($request->user()->purchases()->get());
     }
 
     /**

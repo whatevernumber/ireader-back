@@ -27,7 +27,7 @@ class UpdateUserRequest extends UserRequest
             'email' => [
                 Rule::unique('users')->ignore($this->user),
             ],
-            'old_password' => 'sometimes|current_password',
+            'old_password' => 'nullable|current_password',
             'password' => 'exclude_without:old_password|confirmed|min:5',
         ];
     }

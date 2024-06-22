@@ -16,7 +16,7 @@
 
 @endforeach
 @foreach($books as $book)
-    @if($book->image->image)
+    @if($book->image)
         <?php
         $url = 'http://89.191.225.149/storage/img/covers/' . $book->image->image;
         ?>

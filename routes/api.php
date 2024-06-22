@@ -42,13 +42,13 @@ Route::prefix('authors')->group(function () {
 });
 
 Route::prefix('users')->group(function () {
-    Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-    Route::get('/{user}', [\App\Http\Controllers\UserController::class, 'get']);
-
     Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/{user}', [\App\Http\Controllers\UserController::class, 'get']);
         Route::patch('/{user}', [\App\Http\Controllers\UserController::class, 'update']);
         Route::delete('/{user}', [\App\Http\Controllers\UserController::class, 'delete']);
     });
+
+    Route::middleware(['auth:sanctum', 'ability:update'])->get('/', [\App\Http\Controllers\UserController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->prefix('favourites')->group(function () {
