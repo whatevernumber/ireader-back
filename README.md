@@ -4,7 +4,7 @@
 
 RESTful API for a book store. 
 
-API is accessible at http://89.191.225.149
+API is accessible at http://89.191.225.149:3000/api
 
 ## Stack
 
