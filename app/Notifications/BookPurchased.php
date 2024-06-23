@@ -56,7 +56,7 @@ class BookPurchased extends Notification implements ShouldQueue
             ->subject('Спасибо за покупку')
              ->greeting('Спасибо за покупку!')
            ->line('Вы приобрели книги: ')
-            ->action('Посмотреть на сайте', url('user/favourites'))
+            ->action('Посмотреть на сайте', env('FRONTEND_ADDRESS'))
             ->markdown('emails.purchased', ['books' => $this->books])
             ->attach(public_path('img/bears.jpg'));
     }
