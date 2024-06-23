@@ -13,15 +13,13 @@
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
 {{ $line }}
-
 @endforeach
+
 @foreach($books as $book)
     @if($book->image)
-        <?php
-        $url = 'http://89.191.225.149/storage/img/covers/' . $book->image->image;
-        ?>
+        @php($url = env('BACKEND_ADDRESS') . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . $book->image->image)
 
-![alt]({{$url}})
+![alt]({{ $message->embed($url) }})
 
     @endif
     {{ $book->title . ' - ' . $book->authors[0]->name . ', ' . $book->published_year}}
