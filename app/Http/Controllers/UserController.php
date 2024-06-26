@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AvatarGeneratorHelper;
+use App\Helpers\ImageFromRequestHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\AvatarJob;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -29,31 +32,52 @@ class UserController extends Controller
     /**
      * @throws AccessDeniedHttpException
      */
-    public function create(CreateUserRequest $request): UserResource
+    public function create(CreateUserRequest $request, ImageFromRequestHelper $imageHelper): UserResource
     {
         if ($request->bearerToken() && Auth::guard('sanctum')->user()) {
             throw new AccessDeniedHttpException('Пользователь уже зарегистрирован', null, 403);
         }
 
         $data = $request->validated();
-        $user = User::create($data);
-        $user->save();
 
+        $user = User::create($data);
+
+        if ($request->file('avatar')) {
+            $avatar = $imageHelper->saveAvatar($request->file('avatar'), env('PROFILE_IMAGE_PATH'));
+            $user->image = $avatar;
+        } else {
+            AvatarJob::dispatch($user);
+        }
+
+        $user->save();
         return new UserResource($user);
     }
 
     /**
      * @throws AccessDeniedHttpException
      */
-    public function update(UpdateUserRequest $request, User $user): UserResource
+    public function update(UpdateUserRequest $request, User $user, ImageFromRequestHelper $imageHelper): UserResource
     {
         if ($request->user()->cannot('update', $user)) {
            throw new AccessDeniedHttpException('Вы не можете редактировать другого пользователя', null, 403);
         }
 
         $data = $request->validated();
-
         $user->fill($data);
+        $deleteAvatar = $data['delete_avatar'] ?? 0;
+
+        if ($request->file('avatar')) {
+            $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
+            $avatar = $imageHelper->saveAvatar($request->file('avatar'), env('PROFILE_IMAGE_PATH'));
+            $user->image = $avatar;
+        }
+
+        if ($deleteAvatar) {
+            $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
+            $user->image = null;
+            AvatarJob::dispatch($user);
+        }
+
         $user->save();
 
         return new UserResource($user);
@@ -63,7 +87,7 @@ class UserController extends Controller
      * @throws AccessDeniedHttpException
      * @throws \Exception
      */
-    public function delete(Request $request, User $user): Response
+    public function delete(Request $request, User $user, ImageFromRequestHelper $imageHelper): Response
     {
         if ($request->user()->cannot('delete', $user)) {
             throw new AccessDeniedHttpException('Вы не можете редактировать другого пользователя', null, 403);
@@ -72,8 +96,13 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            $user->cart()->detach();
-            $user->purchases()->detach();
+
+            if ($user->image) {
+                $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
+            }
+
+            $user->finishedBooks()->detach();
+            $user->onRead()->detach();
             $user->favourites()->detach();
             $request->user()->tokens()->delete();
             $user->delete();

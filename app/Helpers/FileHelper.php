@@ -2,12 +2,23 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use League\Flysystem\UnableToDeleteFile;
 
 abstract class FileHelper
 {
+    const ALLOWED_MIME_TYPES = [
+        'image/jpg',
+        'image/jpeg',
+    ];
+
+    const ALLOWED_IMAGE_EXTENSIONS = [
+        'jpg',
+        'jpeg',
+    ];
+
     /**
      * Create a new class instance.
      */
@@ -16,7 +27,7 @@ abstract class FileHelper
         //
     }
 
-    abstract protected function store(mixed $file);
+    abstract protected function store(mixed $file, string $folder);
 
     /**
      * Removes file from the given path

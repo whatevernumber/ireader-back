@@ -16,8 +16,8 @@ Route::prefix('books')->group(function () {
     Route::get('/', [\App\Http\Controllers\BookController::class, 'index']);
     Route::get('/{isbn}', [\App\Http\Controllers\BookController::class, 'get']);
 
+    Route::middleware(['auth:sanctum'])->post('/', [\App\Http\Controllers\BookController::class, 'create']);
     Route::middleware(['auth:sanctum', 'ability:update'])->group(function () {
-        Route::post('/', [\App\Http\Controllers\BookController::class, 'create']);
         Route::patch('/{isbn}', [\App\Http\Controllers\BookController::class, 'update']);
         Route::delete('/{isbn}', [\App\Http\Controllers\BookController::class, 'delete']);
     });
@@ -61,13 +61,14 @@ Route::middleware('auth:sanctum')->prefix('favourites')->group(function () {
    Route::delete('/{isbn}', [\App\Http\Controllers\FavouriteController::class, 'delete']);
 });
 
-Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
-    Route::get('/', [\App\Http\Controllers\CartController::class, 'index']);
-    Route::post('/{isbn}', [\App\Http\Controllers\CartController::class, 'create']);
-    Route::delete('/{isbn}', [\App\Http\Controllers\CartController::class, 'delete']);
+Route::middleware('auth:sanctum')->prefix('progress')->group(function () {
+    Route::get('/', [\App\Http\Controllers\BookProgressController::class, 'index']);
+    Route::post('/{isbn}', [\App\Http\Controllers\BookProgressController::class, 'create']);
+    Route::delete('/{isbn}', [\App\Http\Controllers\BookProgressController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/purchases', [\App\Http\Controllers\PurchaseController::class, 'index']);
-    Route::post('/purchase/{bonus?}', [\App\Http\Controllers\PurchaseController::class, 'buy']);
+    Route::get('/completed', [\App\Http\Controllers\FinishedBookController::class, 'index']);
+    Route::post('/completed/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'create']);
+    Route::delete('/completed/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'delete']);
 });

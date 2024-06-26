@@ -155,9 +155,12 @@ class BookController extends Controller
             $book->genres()->detach();
             $book->savedBy()->detach();
             $book->addedBy()->detach();
-            $book->boughtBy()->detach();
-            $imageHelper->delete($book->image->image, 'public', env('BOOK_COVER_PATH'));
-            $book->image()->delete();
+            $book->finishedBy()->detach();
+
+            if ($book->image) {
+                $imageHelper->delete($book->image->image, 'public', env('BOOK_COVER_PATH'));
+                $book->image()->delete();
+            }
         }
 
         // Wrapped in a transaction to avoid a book being saved without its author/genre
@@ -261,7 +264,7 @@ class BookController extends Controller
             $book->genres()->detach();
             $book->savedBy()->detach();
             $book->addedBy()->detach();
-            $book->boughtBy()->detach();
+            $book->finishedBy()->detach();
 
             if ($book->image()->get()->isNotEmpty()) {
                 $imageHelper->delete($book->image->image, 'public', env('BOOK_COVER_PATH'));

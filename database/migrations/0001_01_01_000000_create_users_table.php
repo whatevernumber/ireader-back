@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('image')->nullable();
             $table->date('birthday')->nullable();
             $table->integer('bonus')->default(0);
             $table->boolean('is_admin')->default(false);

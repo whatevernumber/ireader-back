@@ -13,9 +13,6 @@ class User extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 
-    const BONUS_PERCENT = 3;
-    const BONUS_WELCOME = 200;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -38,14 +35,6 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected static function booted(): void
-    {
-        static::creating(function (User $user) {
-            // adds welcome bonuses to new user
-            $user->bonus = self::BONUS_WELCOME;
-        });
-    }
-
     /**
      * Get the attributes that should be cast.
      *
@@ -58,30 +47,19 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Calculates user's bonus
-     * @param int $price
-     * @return void
-     */
-    public function saveBonus(int $price): void
-    {
-        $bonus = floor(($price / 100) * self::BONUS_PERCENT);
-        $this->bonus = $this->bonus + $bonus;
-    }
-
     public function favourites(): BelongsToMany
     {
         return $this->belongsToMany(Book::class, 'favourites', 'user_id', 'book_isbn');
     }
 
-    public function purchases(): BelongsToMany
+    public function finishedBooks(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'purchases', 'user_id', 'book_isbn');
+        return $this->belongsToMany(Book::class, 'finished_books', 'user_id', 'book_isbn');
     }
 
-    public function cart(): BelongsToMany
+    public function onRead(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'carts', 'user_id', 'book_isbn');
+        return $this->belongsToMany(Book::class, 'books_in_progress', 'user_id', 'book_isbn');
     }
 
 }

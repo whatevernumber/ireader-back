@@ -15,15 +15,13 @@
 {{ $line }}
 @endforeach
 
-@foreach($books as $book)
-    @if($book->image)
-        @php($url = env('BACKEND_ADDRESS') . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . $book->image->image)
+@if($book->image)
+    @php($url = env('BACKEND_ADDRESS') . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . $book->image->image)
 
 ![alt]({{ $message->embed($url) }})
 
     @endif
-    {{ $book->title . ' - ' . $book->authors[0]->name . ', ' . $book->published_year}}
-@endforeach
+{{ $book->title . ' - ' . $book->authors[0]->name . ', ' . $book->published_year}}
 
 {{-- Action Button --}}
 @isset($actionText)

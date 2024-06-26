@@ -45,13 +45,13 @@ class Book extends Model
         return $this->belongsToMany(User::class, 'favourites', 'book_isbn', 'user_id');
     }
 
-    public function boughtBy(): BelongsToMany
+    public function finishedBy(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'purchases', 'book_isbn', 'user_id');
+        return $this->belongsToMany(User::class, 'finished_books', 'book_isbn', 'user_id');
     }
 
     public function addedBy(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'carts', 'book_isbn', 'user_id');
+        return $this->belongsToMany(User::class, 'books_in_progress', 'book_isbn', 'user_id');
     }
 }

@@ -4,8 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -18,6 +17,8 @@ class UserTest extends TestCase
      */
     public function test_user_can_register(): void
     {
+        Queue::fake();
+
         $user = User::factory()->make();
         $user->password_confirmation = $user->password;
 
@@ -159,7 +160,7 @@ class UserTest extends TestCase
     /**
      * User can't delete another user's account
      */
-    public function test_user_can_be_deleted_by_another_user(): void
+    public function test_user_cannot_be_deleted_by_another_user(): void
     {
         $user = User::factory()->create();
         $anotherUser = User::factory()->create();
@@ -180,7 +181,7 @@ class UserTest extends TestCase
     /**
      * Admin can delete their account
      */
-    public function test_admin_can_be_delete_another_user_account(): void
+    public function test_admin_can_delete_another_user_account(): void
     {
         $user = User::factory()->admin()->create();
         $anotherUser = User::factory()->create();
@@ -196,19 +197,5 @@ class UserTest extends TestCase
                 'name' => $anotherUser->name,
                 'email' => $anotherUser->email,
             ]);
-    }
-
-    /**
-     * User's bonus is calculated correctly
-     */
-    public function test_bonus_calculates_correct(): void
-    {
-        $user = User::factory()->make();
-        $bookPrice = fake()->randomNumber(2, true);
-        $user->saveBonus($bookPrice);
-
-        $expectedBonus = floor($bookPrice / 100 * User::BONUS_PERCENT);
-
-        $this->assertEquals($expectedBonus, $user->bonus);
     }
 }

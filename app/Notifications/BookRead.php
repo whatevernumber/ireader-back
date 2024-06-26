@@ -10,14 +10,14 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
 
-class BookPurchased extends Notification implements ShouldQueue
+class BookRead extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private Collection $books)
+    public function __construct(private Book $book)
     {
         //
     }
@@ -52,12 +52,12 @@ class BookPurchased extends Notification implements ShouldQueue
 //        return $mail;
 
         return (new MailMessage)
-            ->subject('Спасибо за покупку')
-            ->subject('Спасибо за покупку')
-             ->greeting('Спасибо за покупку!')
-           ->line('Вы приобрели книги: ')
+            ->subject('Вы прочитали книгу!')
+            ->subject('Книга прочитана')
+             ->greeting('Спасибо за то, что пользуетесь нашим сервисом!')
+           ->line('Сегодня вы закончили читать книгу: ')
             ->action('Посмотреть на сайте', env('FRONTEND_ADDRESS'))
-            ->markdown('emails.purchased', ['books' => $this->books])
+            ->markdown('emails.read', ['book' => $this->book])
             ->attach(public_path('img/bears.jpg'));
     }
 

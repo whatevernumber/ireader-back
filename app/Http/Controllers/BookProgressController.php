@@ -7,16 +7,15 @@ use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CartController extends Controller
+class BookProgressController extends Controller
 {
 
-    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return BookResource::collection(Auth::user()->cart()->get());
+        return BookResource::collection($request->user()->onRead()->get());
     }
 
     /**
@@ -33,15 +32,15 @@ class CartController extends Controller
             throw new NotFoundHttpException('Такой книги не существует', null, 404);
         }
 
-        if ($request->user()->cart()->get()->contains($book)) {
-            throw new ConflictHttpException('Книга уже есть в корзине!', null, 409);
+        if ($request->user()->finishedBooks()->get()->contains($book)) {
+            throw new ConflictHttpException('Книга уже прочитана', null, 409);
         }
 
-        if ($request->user()->purchases()->get()->contains($book)) {
-            throw new ConflictHttpException('Книга уже куплена', null, 409);
+        if ($request->user()->onRead()->get()->contains($book)) {
+            throw new ConflictHttpException('Книга уже в списке читаемых', null, 409);
         }
 
-        $request->user()->cart()->attach($book->isbn);
+        $request->user()->onRead()->attach($book->isbn);
 
         return response('', 200);
     }
@@ -59,11 +58,11 @@ class CartController extends Controller
             throw new NotFoundHttpException('Такой книги не существует', null, 404);
         }
 
-        if (!$request->user()->cart()->get()->contains($book)) {
-            throw new NotFoundHttpException('Такой книги нет в корзине', null, 404);
+        if (!$request->user()->onRead()->get()->contains($book)) {
+            throw new NotFoundHttpException('Такой книги нет в списке читаемых', null, 404);
         }
 
-        $request->user()->cart()->detach($book->isbn);
+        $request->user()->onRead()->detach($book->isbn);
 
         return response('', 204);
     }

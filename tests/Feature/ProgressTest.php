@@ -8,13 +8,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class CartTest extends TestCase
+class ProgressTest extends TestCase
 {
     use RefreshDatabase;
     /**
-     * User can add book in cart
+     * User can add book to progress list
      */
-    public function test_user_can_add_book_to_cart(): void
+    public function test_user_can_add_book_to_progress_list(): void
     {
         $user = User::factory()->create();
 
@@ -22,20 +22,20 @@ class CartTest extends TestCase
 
         $book = Book::factory()->create();
 
-        $response = $this->post('api/cart/' . $book->isbn);
+        $response = $this->post('api/progress/' . $book->isbn);
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('carts', [
+        $this->assertDatabaseHas('books_in_progress', [
             'book_isbn' => $book->isbn,
             'user_id' => $user->id,
         ]);
     }
 
     /**
-     * User can't add existing in the cart book again
+     * User can't add existing in the list book again
      */
-    public function test_user_cannot_add_existing_book_to_cart(): void
+    public function test_user_cannot_add_existing_book_to_progress_list(): void
     {
         $user = User::factory()->create();
 
@@ -43,17 +43,17 @@ class CartTest extends TestCase
 
         $book = Book::factory()->create();
 
-        $user->cart()->save($book);
+        $user->onRead()->save($book);
 
-        $response = $this->post('api/cart/' . $book->isbn);
+        $response = $this->post('api/progress/' . $book->isbn);
 
         $response->assertStatus(409);
     }
 
     /**
-     * User can't add already purchased book in the cart book again
+     * User can't add already read book in the progress list again
      */
-    public function test_user_cannot_add_purchased_book_to_cart(): void
+    public function test_user_cannot_add_finished_book_to_progress_list(): void
     {
         $user = User::factory()->create();
 
@@ -61,17 +61,17 @@ class CartTest extends TestCase
 
         $book = Book::factory()->create();
 
-        $user->purchases()->attach($book, ['price' => $book->price]);
+        $user->finishedBooks()->attach($book->isbn);
 
-        $response = $this->post('api/cart/' . $book->isbn);
+        $response = $this->post('api/progress/' . $book->isbn);
 
         $response->assertStatus(409);
     }
 
     /**
-     * User can delete book in cart
+     * User can book from the progress list
      */
-    public function test_user_can_delete_book_from_cart(): void
+    public function test_user_can_delete_book_from_list(): void
     {
         $user = User::factory()->create();
 
@@ -79,13 +79,13 @@ class CartTest extends TestCase
 
         $book = Book::factory()->create();
 
-        $user->cart()->save($book);
+        $user->onRead()->attach($book->isbn);
 
-        $response = $this->delete('api/cart/' . $book->isbn);
+        $response = $this->delete('api/progress/' . $book->isbn);
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('carts', [
+        $this->assertDatabaseMissing('books_in_progress', [
             'book_isbn' => $book->isbn,
             'user_id' => $user->id,
         ]);
@@ -94,7 +94,7 @@ class CartTest extends TestCase
     /**
      * User can get list of his books in cart
      */
-    public function test_user_can_get_cart(): void
+    public function test_user_can_get_progress_list(): void
     {
         $user = User::factory()->create();
 
@@ -102,9 +102,9 @@ class CartTest extends TestCase
 
         $books = Book::factory()->count(3)->create();
 
-        $user->cart()->saveMany($books);
+        $user->onRead()->saveMany($books);
 
-        $response = $this->get('api/cart');
+        $response = $this->get('api/progress');
 
         $response->assertJsonStructure(
             [

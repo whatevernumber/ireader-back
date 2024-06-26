@@ -24,6 +24,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|string',
             'birthday' => 'sometimes|date',
+            'image' => 'sometimes|file|size:3000|extensions:jpg,jpeg|mimes:jpg'
         ];
     }
 
@@ -37,6 +38,8 @@ class UserRequest extends FormRequest
             'password.required' => 'Введите пароль',
             'password.confirmed' => 'Пароли не совпадают',
             'password.min' => 'Пароль должен состоять минимум из 5 символов',
+            'image.size,' => 'Размер слишком большой',
+
         ];
     }
 }

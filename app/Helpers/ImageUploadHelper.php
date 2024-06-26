@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToWriteFile;
@@ -10,23 +11,14 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ImageUploadHelper extends FileHelper
 {
-    const ALLOWED_MIME_TYPES = [
-        'image/jpg',
-        'image/jpeg',
-    ];
-
-    const ALLOWED_IMAGE_EXTENSIONS = [
-        'jpg',
-        'jpeg',
-    ];
-
     /**
      * @param $link string
+     * @param $folder string
      * @return string|bool
      * @throws FileException
      * @throws \Exception
      */
-    public function uploadFromLink(string $link): string | bool
+    public function uploadFromLink(string $link, string $folder): string | bool
     {
         $response = Http::get($link);
 
@@ -39,7 +31,7 @@ class ImageUploadHelper extends FileHelper
                     throw new FileException('Недопустимый тип файла');
                 }
 
-                return $this->store($file);
+                return $this->store($file, $folder);
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage());
             }
@@ -51,11 +43,12 @@ class ImageUploadHelper extends FileHelper
     /**
      * Saves the image to the disk
      * @param $file mixed
+     * @param $folder string
      * @return string
      * @throws ExtensionFileException
      * @throws UnableToWriteFile
      */
-    protected function store(mixed $file): string
+    protected function store(mixed $file, string $folder): string
     {
         $extension = $this->getExt($file);
 
@@ -68,7 +61,7 @@ class ImageUploadHelper extends FileHelper
         }
 
         $name = uniqid('ibook-') . '.' . $extension;
-        $path = env('BOOK_COVER_PATH') . DIRECTORY_SEPARATOR . $name;
+        $path = $folder . DIRECTORY_SEPARATOR . $name;
 
         try {
             Storage::disk('public')->put($path, $file);

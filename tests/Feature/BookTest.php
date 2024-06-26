@@ -19,13 +19,13 @@ class BookTest extends TestCase
     /**
      * Admin can add a new book
      */
-    public function test_admin_can_add_book(): void
+    public function test_user_can_add_book(): void
     {
         Queue::fake();
 
-        $user = User::factory()->admin()->create();
+        $user = User::factory()->create();
 
-        Sanctum::actingAs($user, ['update']);
+        Sanctum::actingAs($user);
 
         $book = Book::factory()->make();
         $genre = Genre::factory()->make();
