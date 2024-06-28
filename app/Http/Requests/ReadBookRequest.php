@@ -23,7 +23,7 @@ class ReadBookRequest extends FormRequest
     {
         return [
             'comment' => 'sometimes|string',
-            'rate' => 'sometimes|integer',
+            'rate' => 'sometimes|integer|min:1|max:5',
         ];
     }
 }

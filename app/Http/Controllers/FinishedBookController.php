@@ -17,7 +17,15 @@ class FinishedBookController extends Controller
 {
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return BookResource::collection($request->user()->finishedBooks()->get());
+        $query = $request->user()->finishedBooks();
+
+        if ($request->query('page')) {
+            $books = $query->paginate(env('BOOKS_PER_PAGE'));
+        } else {
+            $books = $query->get();
+        }
+
+        return BookResource::collection($books);
     }
 
     /**
@@ -28,6 +36,7 @@ class FinishedBookController extends Controller
     public function create(ReadBookRequest $request, string $isbn): Response
     {
         $data = $request->validated();
+        $days = null;
 
         if (str_ends_with($isbn, 'X')) {
             $isbn = str_replace('X', '', $isbn);
@@ -47,12 +56,24 @@ class FinishedBookController extends Controller
         }
 
         if ($booksInProgress->contains($book)) {
+            $progressDate = $user->onRead()->where('isbn', $book->isbn)->first()->pivot->created_at;
+            $origin = date_create();
+            $target = date_create($progressDate);
+            $interval = date_diff($origin, $target)->format('%a');
+
+            if ($interval) {
+                $days = $interval;
+            } else {
+                $days = 1;
+            }
+
             $user->onRead()->detach($book->isbn);
         }
 
         $user->finishedBooks()->attach($book->isbn, [
             'comment' => $data['comment'] ?? '',
             'rate' => $data['rate'] ?? null,
+            'completed_days' => $days ?? null,
         ]);
 
         try {

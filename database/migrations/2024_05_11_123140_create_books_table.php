@@ -16,10 +16,10 @@ return new class extends Migration
             $table->boolean('has_x')->default(false);
             $table->tinyText('title');
             $table->text('description');
-            $table->tinyInteger('price');
             $table->tinyInteger('published_year');
             $table->integer('pages')->nullable();
             $table->timestamps();
+            $table->tinyInteger('rate')->default(0);
 
             $table->index('title');
             $table->fullText('description');

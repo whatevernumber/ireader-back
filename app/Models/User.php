@@ -54,12 +54,14 @@ class User extends Authenticatable
 
     public function finishedBooks(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'finished_books', 'user_id', 'book_isbn');
+        return $this->belongsToMany(Book::class, 'finished_books', 'user_id', 'book_isbn')
+            ->withPivot('comment', 'rate', 'completed_days', 'created_at')->withTimestamps();
     }
 
     public function onRead(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'books_in_progress', 'user_id', 'book_isbn');
+        return $this->belongsToMany(Book::class, 'books_in_progress', 'user_id', 'book_isbn')
+            ->with(['genres', 'authors'])->withPivot('created_at')->withTimestamps();
     }
 
 }

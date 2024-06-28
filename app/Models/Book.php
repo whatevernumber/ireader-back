@@ -47,7 +47,8 @@ class Book extends Model
 
     public function finishedBy(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'finished_books', 'book_isbn', 'user_id');
+        return $this->belongsToMany(User::class, 'finished_books', 'book_isbn', 'user_id')
+            ->withPivot('comment', 'rate', 'completed_days', 'created_at')->withTimestamps();
     }
 
     public function addedBy(): BelongsToMany

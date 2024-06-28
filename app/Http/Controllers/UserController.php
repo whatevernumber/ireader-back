@@ -26,7 +26,7 @@ class UserController extends Controller
 
     public function get(User $user): UserResource
     {
-        return new UserResource($user);
+        return new UserResource($user->load('finishedBooks')->loadCount(['favourites', 'onread', 'finishedbooks']));
     }
 
     /**
@@ -70,11 +70,11 @@ class UserController extends Controller
             $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
             $avatar = $imageHelper->saveAvatar($request->file('avatar'), env('PROFILE_IMAGE_PATH'));
             $user->image = $avatar;
-        }
-
-        if ($deleteAvatar) {
+        } elseif ($user->image && $deleteAvatar) {
             $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
             $user->image = null;
+            AvatarJob::dispatch($user);
+        } elseif (!$user->image) {
             AvatarJob::dispatch($user);
         }
 
@@ -96,7 +96,6 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-
             if ($user->image) {
                 $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
             }

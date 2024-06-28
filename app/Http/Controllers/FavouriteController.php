@@ -15,7 +15,15 @@ class FavouriteController extends Controller
 
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return BookResource::collection($request->user()->favourites()->get());
+        $query = $request->user()->favourites();
+
+        if ($request->query('page')) {
+            $books = $query->paginate(env('BOOKS_PER_PAGE'));
+        } else {
+            $books = $query->get();
+        }
+
+        return BookResource::collection($books);
     }
 
     /**

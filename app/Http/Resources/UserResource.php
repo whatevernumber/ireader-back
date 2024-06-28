@@ -21,7 +21,12 @@ class UserResource extends JsonResource
             'birthday' => $this->birthday,
             'admin' => $this->is_admin,
             'bonus' => $this->bonus,
+            'avatar' => $this->image,
             'token' => $this->whenNotNull($this->token),
+            'favourites_count' => $this->whenNotNull($this->favourites_count),
+            'progress_count' => $this->whenNotNull($this->onread_count),
+            'completed_count' => $this->whenNotNull($this->finishedbooks_count),
+            'progress' => $this->whenNotNull($this->onread),
         ];
     }
 }

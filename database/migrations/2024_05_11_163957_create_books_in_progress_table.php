@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreignId('book_isbn')->references('isbn')->on('books')->cascadeOnDelete();
             $table->unique(['user_id', 'book_isbn']);
+
+            $table->timestamps();
         });
     }
 

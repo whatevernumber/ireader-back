@@ -14,9 +14,9 @@ return new class extends Migration
     {
         Schema::create('finished_books', function (Blueprint $table) {
             $table->id();
-            $table->date('read_date')->default(DB::raw('NOW()'));
             $table->longText('comment')->nullable();
             $table->tinyInteger('rate')->nullable();
+            $table->integer('completed_days')->nullable();
 
             $table->foreignId('book_isbn')->references('isbn')
                 ->on('books')->cascadeOnDelete();
@@ -24,6 +24,8 @@ return new class extends Migration
                 ->on('users')->cascadeOnDelete();
 
             $table->unique(['book_isbn', 'user_id']);
+
+            $table->timestamps();
         });
     }
 

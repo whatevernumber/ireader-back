@@ -15,7 +15,15 @@ class BookProgressController extends Controller
 
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return BookResource::collection($request->user()->onRead()->get());
+        $query = $request->user()->onRead();
+
+        if ($request->query('page')) {
+            $books = $query->paginate(env('BOOKS_PER_PAGE'));
+        } else {
+            $books = $query->get();
+        }
+
+        return BookResource::collection($books);
     }
 
     /**

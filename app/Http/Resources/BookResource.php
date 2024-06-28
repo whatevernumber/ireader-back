@@ -25,11 +25,22 @@ class BookResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'pages' => $this->pages,
-            'price' => $this->price,
             'published_year' => $this->published_year,
             'authors' => AuthorResource::collection($this->authors),
             'genres' => GenreResource::collection($this->genres),
             'image' => new ImageResource($this->image),
+            'completion_days' => $this->whenPivotLoaded('finished_books', function () {
+                return $this->pivot->completed_days;
+            }),
+            'review' => $this->whenPivotLoaded('finished_books', function () {
+                return $this->pivot->comment;
+            }),
+            'user_rate' => $this->whenPivotLoaded('finished_books', function () {
+                return $this->pivot->rate;
+            }),
+            'finished_at' => $this->whenPivotLoaded('finished_books', function () {
+                return $this->pivot->created_at;
+            }),
         ];
     }
 }
