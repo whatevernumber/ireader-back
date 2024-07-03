@@ -16,7 +16,7 @@ class IsbnTest extends TestCase
         $helper = new IsbnHelper();
         $result = $helper->checkIsbn(fake()->isbn13());
 
-        self::assertTrue($result);
+        $this->assertTrue($result);
     }
 
     /**
@@ -27,7 +27,7 @@ class IsbnTest extends TestCase
         $helper = new IsbnHelper();
         $result = $helper->checkIsbn(fake()->isbn10());
 
-        self::assertTrue($result);
+        $this->assertTrue($result);
     }
 
     /**

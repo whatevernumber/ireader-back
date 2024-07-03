@@ -8,8 +8,8 @@ namespace App\Helpers;
 class IsbnHelper
 {
     // dividers for isbn-10 and isbn-13
-    private const DIVIDER_10 = 11;
-    private const DIVIDER_13 = 10;
+    private const ISBN_DIVISOR_10 = 11;
+    private const ISBN_DIVISOR_13 = 10;
 
     /**
      * Checks if isbn is valid
@@ -20,39 +20,39 @@ class IsbnHelper
     {
         $resultArray = [];
 
-        // gets the numbers (the last character can be possible x)
+        // gets the numbers (the last character is possible to be X)
         preg_match_all('/\d|X/', $isbn, $resultArray);
         $resultArray = $resultArray[0];
 
         $count = count($resultArray);
 
         // removes the last digit
-        $last_index = array_pop($resultArray);
+        $lastIndex = array_pop($resultArray);
 
-        $last_index = $last_index === 'X' ? 'X' : intval($last_index);
+        $lastIndex = $lastIndex === 'X' ? 'X' : intval($lastIndex);
 
-        // the divider is different to ISBN-10 and ISBN-13
-        $divider = $count === 10 ? self::DIVIDER_10 : self::DIVIDER_13;
+        // the divider is different for ISBN-10 and ISBN-13
+        $divider = $count === 10 ? self::ISBN_DIVISOR_10 : self::ISBN_DIVISOR_13;
 
-        // gets the sum for the isbn digits
+        // gets the sum of the isbn digits
         $sum = $this->getIsbnSum($resultArray, $count);
 
-        // finds the modulo
+        // finds the remainder
         $mod = $sum % $divider;
 
-        // subtracts the remainder
+        // subtracts the remainder from the divisor
         $result = $divider - $mod;
 
         // if the result is 11 and the digits are from the ISBN-10 - the result turns to 0
-        if ($result === 11 && $divider === self::DIVIDER_10) {
+        if ($result === 11 && $divider === self::ISBN_DIVISOR_10) {
             $result = 0;
         } else if ($result === 10) {
-            // depends on the format of ISBN 10 turns to 'X' or 0
-            $divider === self::DIVIDER_10 ? $result = 'X' : $result = 0;
+            // depends on the format of ISBN 10, the result is converted to 'X' or 0
+            $divider === self::ISBN_DIVISOR_10 ? $result = 'X' : $result = 0;
         }
 
         // check if the last digit is valid
-        return $last_index === $result;
+        return $lastIndex === $result;
     }
 
     /**

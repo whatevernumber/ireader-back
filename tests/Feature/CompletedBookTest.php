@@ -27,8 +27,7 @@ class CompletedBookTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('finished_books',
-        [
+        $this->assertDatabaseHas('finished_books', [
             'user_id' => $user->id,
             'book_isbn' => $book->isbn,
         ]);
@@ -51,8 +50,7 @@ class CompletedBookTest extends TestCase
 
         $response = $this->get('api/completed');
 
-        $response->assertJsonStructure(
-            [
+        $response->assertJsonStructure([
                 'data' => [
                     ['isbn'],
                     ['isbn'],
@@ -78,8 +76,7 @@ class CompletedBookTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('finished_books',
-            [
+        $this->assertDatabaseMissing('finished_books', [
                 'book_isbn' => $book->isbn,
             ]);
     }

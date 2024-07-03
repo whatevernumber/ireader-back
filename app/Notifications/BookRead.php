@@ -37,25 +37,11 @@ class BookRead extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-//        $mail = (new MailMessage)
-//                    ->subject('Спасибо за покупку')
-//                    ->greeting('Спасибо за покупку!')
-//                    ->line('Вы приобрели книги: ');
-//
-//        foreach ($this->books as $book) {
-//            $mail->line($book->title . ' - ' . $book->authors[0]->name . ', ' . $book->published_year);
-//        }
-//
-//        $mail  ->action('Посмотреть на сайте', url('user/favourites'))
-//               ->attach(public_path('img/bears.jpg'));
-//
-//        return $mail;
-
         return (new MailMessage)
             ->subject('Вы прочитали книгу!')
             ->subject('Книга прочитана')
-             ->greeting('Спасибо за то, что пользуетесь нашим сервисом!')
-           ->line('Сегодня вы закончили читать книгу: ')
+            ->greeting('Спасибо за то, что пользуетесь нашим сервисом!')
+            ->line('Сегодня вы закончили читать книгу: ')
             ->action('Посмотреть на сайте', env('FRONTEND_ADDRESS'))
             ->markdown('emails.read', ['book' => $this->book])
             ->attach(public_path('img/bears.jpg'));

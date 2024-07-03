@@ -25,7 +25,7 @@ class ImageFromRequestHelper extends FileHelper
     }
 
     /**
-     * @param mixed $file
+     * @inheritDoc
      * @throws ExtensionFileException
      * @throws UnableToWriteFile
      * @return string
@@ -42,7 +42,7 @@ class ImageFromRequestHelper extends FileHelper
             throw new ExtensionFileException('Неверный тип расширения');
         }
 
-        $name = uniqid('ibook_profile-');
+        $name = uniqid(env('PROFILE_PREFIX'));
 
         try {
             $file->storeAs($folder, $name);

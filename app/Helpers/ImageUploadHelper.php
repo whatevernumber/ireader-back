@@ -18,7 +18,7 @@ class ImageUploadHelper extends FileHelper
      * @throws FileException
      * @throws \Exception
      */
-    public function uploadFromLink(string $link, string $folder): string | bool
+    public function uploadFromLink(string $link, string $folder): string
     {
         $response = Http::get($link);
 
@@ -36,15 +36,12 @@ class ImageUploadHelper extends FileHelper
                 throw new \Exception($e->getMessage());
             }
         } else {
-            return false;
+            throw new \Exception('Что-то пошло не так', 500);
         }
     }
 
     /**
-     * Saves the image to the disk
-     * @param $file mixed
-     * @param $folder string
-     * @return string
+     * @inheritDoc
      * @throws ExtensionFileException
      * @throws UnableToWriteFile
      */
@@ -60,7 +57,7 @@ class ImageUploadHelper extends FileHelper
             throw new ExtensionFileException('Неверный тип расширения');
         }
 
-        $name = uniqid('ibook-') . '.' . $extension;
+        $name = uniqid(env('BOOK_IMAGE_PREFIX')) . '.' . $extension;
         $path = $folder . DIRECTORY_SEPARATOR . $name;
 
         try {

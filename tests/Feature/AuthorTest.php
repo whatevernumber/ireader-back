@@ -26,8 +26,7 @@ class AuthorTest extends TestCase
 
         $this->postJson('api/authors', $author->toArray());
 
-        $this->assertDatabaseHas('authors',
-        [
+        $this->assertDatabaseHas('authors', [
            'name' => $author->name,
         ]);
     }
@@ -46,8 +45,7 @@ class AuthorTest extends TestCase
 
         $this->patchJson('api/authors/' . $author->id, $newAuthor->toArray());
 
-        $this->assertDatabaseHas('authors',
-            [
+        $this->assertDatabaseHas('authors', [
                 'id' => $author->id,
                 'name' => $newAuthor->name,
             ]);
@@ -66,8 +64,7 @@ class AuthorTest extends TestCase
 
         $this->delete('api/authors/' . $author->id);
 
-        $this->assertDatabaseMissing('authors',
-            [
+        $this->assertDatabaseMissing('authors', [
                 'id' => $author->id,
                 'name' => $author->name,
             ]);
@@ -90,8 +87,7 @@ class AuthorTest extends TestCase
 
         $response->assertStatus(409);
 
-        $this->assertDatabaseHas('authors',
-            [
+        $this->assertDatabaseHas('authors', [
                 'id' => $author->id,
                 'name' => $author->name,
             ]);
@@ -112,8 +108,7 @@ class AuthorTest extends TestCase
 
         $response->assertStatus(403);
 
-        $this->assertDatabaseHas('authors',
-            [
+        $this->assertDatabaseHas('authors', [
                 'id' => $author->id,
                 'name' => $author->name,
             ]);
@@ -136,8 +131,7 @@ class AuthorTest extends TestCase
 
         $response->assertStatus(403);
 
-        $this->assertDatabaseHas('authors',
-            [
+        $this->assertDatabaseHas('authors', [
                 'id' => $author->id,
                 'name' => $author->name,
             ]);

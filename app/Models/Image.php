@@ -27,9 +27,4 @@ class Image extends Model
         $newImage->image = $name;
         return $newImage;
     }
-
-    public function book(): BelongsTo
-    {
-        return $this->belongsTo(Book::class);
-    }
 }

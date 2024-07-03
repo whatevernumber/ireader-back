@@ -31,8 +31,7 @@ class UserTest extends TestCase
 
        $response->assertCreated();
 
-        $this->assertDatabaseHas('users',
-            [
+        $this->assertDatabaseHas('users', [
                 'name' => $user->name,
                 'email' => $user->email
             ]
@@ -51,8 +50,7 @@ class UserTest extends TestCase
             'password' => 'test',
         ]);
 
-        $response->assertJsonStructure(
-            [
+        $response->assertJsonStructure([
                 'data' => [
                     'token'
                 ]
@@ -75,8 +73,7 @@ class UserTest extends TestCase
             'email' => $updatedUser->email,
         ]);
 
-        $this->assertDatabaseHas('users',
-            [
+        $this->assertDatabaseHas('users', [
                 'id' => $user->id,
                 'name' => $updatedUser->name,
                 'email' => $updatedUser->email,
@@ -103,8 +100,7 @@ class UserTest extends TestCase
 
         $response->assertStatus(403);
 
-        $this->assertDatabaseHas('users',
-            [
+        $this->assertDatabaseHas('users', [
                 'id' => $anotherUser->id,
                 'name' => $anotherUser->name,
                 'email' => $anotherUser->email,
@@ -129,8 +125,7 @@ class UserTest extends TestCase
             'email' => $updatedUser->email,
         ]);
 
-        $this->assertDatabaseHas('users',
-            [
+        $this->assertDatabaseHas('users', [
                 'id' => $anotherUser->id,
                 'name' => $updatedUser->name,
                 'email' => $updatedUser->email,
@@ -149,8 +144,7 @@ class UserTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('users',
-        [
+        $this->assertDatabaseMissing('users', [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
@@ -170,8 +164,7 @@ class UserTest extends TestCase
 
         $response->assertStatus(403);
 
-        $this->assertDatabaseHas('users',
-            [
+        $this->assertDatabaseHas('users', [
                 'id' => $anotherUser->id,
                 'name' => $anotherUser->name,
                 'email' => $anotherUser->email,
@@ -191,8 +184,7 @@ class UserTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('users',
-            [
+        $this->assertDatabaseMissing('users', [
                 'id' => $anotherUser->id,
                 'name' => $anotherUser->name,
                 'email' => $anotherUser->email,

@@ -84,8 +84,7 @@ class GoogleBookCoverJobTest extends TestCase
             'genres' => [$genre->value],
         ]);
 
-        $this->assertDatabaseHas('books',
-            [
+        $this->assertDatabaseHas('books', [
                 'isbn' => $book->isbn,
                 'title' => $book->title,
                 'description' => $book->description,

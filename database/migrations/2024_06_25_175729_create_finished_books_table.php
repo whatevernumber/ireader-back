@@ -13,7 +13,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('finished_books', function (Blueprint $table) {
-            $table->id();
             $table->longText('comment')->nullable();
             $table->tinyInteger('rate')->nullable();
             $table->integer('completed_days')->nullable();

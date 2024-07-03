@@ -6,7 +6,7 @@ API is accessible at http://89.191.225.149:3000/api
 
 ## Stack
 
-Laravel, PostgreSQL, Nginx.
+PHP 8.2, Laravel 11, PostgreSQL, Nginx.
 
 ## Description
 

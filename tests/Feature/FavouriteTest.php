@@ -89,8 +89,7 @@ class FavouriteTest extends TestCase
 
         $response = $this->get('api/favourites');
 
-        $response->assertJsonStructure(
-            [
+        $response->assertJsonStructure([
                 'data' => [
                     ['isbn'],
                     ['isbn'],

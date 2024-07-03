@@ -41,8 +41,7 @@ class BookTest extends TestCase
             'genres' => [$genre->value],
         ]);
 
-        $this->assertDatabaseHas('books',
-        [
+        $this->assertDatabaseHas('books', [
            'isbn' => $book->isbn,
            'title' => $book->title,
            'description' => $book->description,
@@ -79,8 +78,7 @@ class BookTest extends TestCase
             'genres' => [$genre->value],
         ]);
 
-        $this->assertDatabaseHas('books',
-        [
+        $this->assertDatabaseHas('books', [
            'isbn' => $book->isbn,
            'title' => $updatedBook->title,
            'description' => $updatedBook->description,
@@ -104,8 +102,7 @@ class BookTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('books',
-        [
+        $this->assertDatabaseMissing('books', [
             'isbn' => $book->isbn,
         ]);
     }
@@ -137,8 +134,7 @@ class BookTest extends TestCase
 
         $response->assertStatus(403);
 
-        $this->assertDatabaseHas('books',
-            [
+        $this->assertDatabaseHas('books', [
                 'isbn' => $book->isbn,
                 'title' => $book->title,
                 'description' => $book->description,
@@ -371,7 +367,7 @@ class BookTest extends TestCase
         $genre = Genre::factory()->create();
         $author = Author::factory()->create();
 
-        $book = Book::factory()->hasAttached($genre)->hasAttached($author)->create();
+        Book::factory()->hasAttached($genre)->hasAttached($author)->create();
 
         $response = $this->get('api/books/search');
 

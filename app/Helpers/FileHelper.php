@@ -27,16 +27,22 @@ abstract class FileHelper
         //
     }
 
-    abstract protected function store(mixed $file, string $folder);
+    /**
+     * Saves the file
+     * @param mixed $file
+     * @param string $folder
+     * @return string
+     */
+    abstract protected function store(mixed $file, string $folder): string;
 
     /**
-     * Removes file from the given path
+     * Removes file at the given path
      * @param string $filename
      * @param string $disk
      * @param string $path
      * @return void
      */
-    public function delete(string $filename, string $disk, string $path): void
+    public function delete(string $filename, string $path, string $disk = 'public'): void
     {
         $filePath = $path . DIRECTORY_SEPARATOR . $filename;
 
@@ -55,7 +61,7 @@ abstract class FileHelper
     protected function getMime(mixed $file): string
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        return $mime = $finfo->buffer($file);
+        return $finfo->buffer($file);
     }
 
     /**

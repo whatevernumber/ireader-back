@@ -4,9 +4,9 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Http;
 
-class GoogleBookApiHelper
+class GoogleBookApiService
 {
-    protected const GOOGLE_VOLUMES_URL = 'https://www.googleapis.com/books/v1/volumes';
+    protected const GOOGLE_BOOKS_API_BASE_URL = 'https://www.googleapis.com/books/v1/volumes';
 
     /**
      * Gets data from Google Api
@@ -17,7 +17,7 @@ class GoogleBookApiHelper
     public function getData(array $params): array
     {
 
-        $data = Http::get(self::GOOGLE_VOLUMES_URL . $this->getQuery($params));
+        $data = Http::get(self::GOOGLE_BOOKS_API_BASE_URL . $this->getSearchParams($params) . '&key=' . env('GOOGLE_KEY'));
 
         if ($data->ok()) {
             return $data->json();
@@ -27,18 +27,22 @@ class GoogleBookApiHelper
     }
 
     /**
-     * Builds query with the given params
+     * Builds search query with the given params
      * @param array $params
      * @return string
      */
-    public function getQuery(array $params): string
+
+    private function getSearchParams(array $params): string
     {
         $query = '?q=';
 
         foreach ($params as $key => $value) {
-            $query = $query . $key . '=' . $value;
+            $query = $query . $key . ':' . $value . '+';
         }
 
-        return $query . '&key=' . env('GOOGLE_KEY');
+        // trims the last '+'
+        $query = rtrim($query, '+');
+
+        return $query;
     }
 }

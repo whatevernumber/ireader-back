@@ -74,9 +74,7 @@ class BookController extends Controller
         }
 
         // checks if the book with this isbn exists
-        $exists = Book::find($data['isbn']);
-
-        if ($exists) {
+        if (Book::find($data['isbn'])) {
             throw new ConflictHttpException('Книга с таким ISBN уже есть в системе', null, 409);
         }
 
@@ -86,7 +84,7 @@ class BookController extends Controller
         try {
             $book = Book::create($data);
 
-            // processes book's authors
+            // handles book's authors
             foreach ($data['authors'] as $new_author) {
                 $author = Author::firstOrCreate([
                     'name' => $new_author,
@@ -95,10 +93,10 @@ class BookController extends Controller
                 $book->authors()->save($author);
             }
 
-            // processes book's genres
-            foreach ($data['genres'] as $selected_genre) {
+            // handles book's genres
+            foreach ($data['genres'] as $selectedGenre) {
                 $genre = Genre::firstOrCreate([
-                    'value' => $selected_genre,
+                    'value' => $selectedGenre,
                 ]);
 
                 $book->genres()->save($genre);
@@ -141,12 +139,12 @@ class BookController extends Controller
         $data['isbn'] = preg_replace('/([ISBN:-]|\s)/', '', $data['isbn']);
 
         // if the isbn was changed, check if the new one is correct and free
-        if (intval($data['isbn']) !== $book->isbn) {
+        if ((int)($data['isbn']) !== $book->isbn) {
             $isbnChanged = true;
             // validates the isbn checksum
-            $isValid = $isbnHelper->checkIsbn($data['isbn']);
+            $isbnIsValid = $isbnHelper->checkIsbn($data['isbn']);
 
-            if (!$isValid) {
+            if (!$isbnIsValid) {
                 throw ValidationException::withMessages(['isbn' => 'Некорретный isbn']);
             }
 
@@ -167,8 +165,7 @@ class BookController extends Controller
         DB::beginTransaction();
 
         try {
-            $book->fill($data);
-            $book->save();
+            $book->update($data);
 
             // takes existing relationships and transform it to array to check if there were changes added
             $authors = $book->authors()->pluck('name')->toArray();
@@ -267,7 +264,7 @@ class BookController extends Controller
             $book->finishedBy()->detach();
 
             if ($book->image()->get()->isNotEmpty()) {
-                $imageHelper->delete($book->image->image, 'public', env('BOOK_COVER_PATH'));
+                $imageHelper->delete($book->image->image, env('BOOK_COVER_PATH'));
                 $book->image()->delete();
             }
 

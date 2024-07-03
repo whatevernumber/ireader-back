@@ -35,7 +35,7 @@ class ProgressTest extends TestCase
     /**
      * User can't add existing in the list book again
      */
-    public function test_user_cannot_add_existing_book_to_progress_list(): void
+    public function test_user_cannot_add_book_to_progress_list_twice(): void
     {
         $user = User::factory()->create();
 
@@ -92,7 +92,7 @@ class ProgressTest extends TestCase
     }
 
     /**
-     * User can get list of his books in cart
+     * User can get list of their books in cart
      */
     public function test_user_can_get_progress_list(): void
     {
@@ -106,8 +106,7 @@ class ProgressTest extends TestCase
 
         $response = $this->get('api/progress');
 
-        $response->assertJsonStructure(
-            [
+        $response->assertJsonStructure([
                 'data' => [
                     ['isbn'],
                     ['isbn'],

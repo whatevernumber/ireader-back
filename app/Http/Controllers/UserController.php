@@ -67,11 +67,11 @@ class UserController extends Controller
         $deleteAvatar = $data['delete_avatar'] ?? 0;
 
         if ($request->file('avatar')) {
-            $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
+            $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));
             $avatar = $imageHelper->saveAvatar($request->file('avatar'), env('PROFILE_IMAGE_PATH'));
             $user->image = $avatar;
         } elseif ($user->image && $deleteAvatar) {
-            $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
+            $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));
             $user->image = null;
             AvatarJob::dispatch($user);
         } elseif (!$user->image) {
@@ -97,7 +97,7 @@ class UserController extends Controller
 
         try {
             if ($user->image) {
-                $imageHelper->delete($user->image, 'public', env('PROFILE_IMAGE_PATH'));
+                $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));
             }
 
             $user->finishedBooks()->detach();
