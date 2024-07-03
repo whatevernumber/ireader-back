@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Helpers\GoogleBookApiHelper;
+use App\Helpers\GoogleBookApiService;
 use App\Helpers\ImageUploadHelper;
 use App\Models\Book;
 use App\Models\Image;
@@ -26,9 +26,9 @@ class GoogleBookCoverJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(GoogleBookApiHelper $googleHelper, ImageUploadHelper $imageHelper): void
+    public function handle(GoogleBookApiService $googleHelper, ImageUploadHelper $imageHelper): void
     {
-        $data = $googleHelper->getData([':isbn' => $this->book->isbn]);
+        $data = $googleHelper->getData(['isbn' => $this->book->isbn]);
 
         if ($data['totalItems'] > 0) {
             $link = $data['items'][0]['volumeInfo']['imageLinks']['thumbnail'];
