@@ -30,7 +30,7 @@ class GoogleBookCoverJob implements ShouldQueue
     {
         $data = $googleHelper->getData([':isbn' => $this->book->isbn]);
 
-        if ($data['totalItems'] !== 0) {
+        if ($data['totalItems'] > 0) {
             $link = $data['items'][0]['volumeInfo']['imageLinks']['thumbnail'];
 
             $filename = $imageHelper->uploadFromLink($link, env('BOOK_COVER_PATH'));
