@@ -28,7 +28,7 @@ abstract class FileHelper
     }
 
     /**
-     * Saves the file
+     * Saves the given file and returns its name
      * @param mixed $file
      * @param string $folder
      * @return string
