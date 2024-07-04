@@ -41,7 +41,7 @@ class UserController extends Controller
         $user = User::create($data);
 
         if ($request->file('avatar')) {
-            $avatar = $imageHelper->saveFromRequest($request->file('avatar'), env('PROFILE_IMAGE_PATH'));
+            $avatar = $imageHelper->saveFromRequest($request->file('avatar'), env('PROFILE_IMAGE_PATH'), env('PROFILE_PREFIX'));
             $user->image = $avatar;
         } else {
             AvatarJob::dispatch($user);
@@ -66,7 +66,7 @@ class UserController extends Controller
 
         if ($request->file('avatar')) {
             $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));
-            $avatar = $imageHelper->saveFromRequest($request->file('avatar'), env('PROFILE_IMAGE_PATH'));
+            $avatar = $imageHelper->saveFromRequest($request->file('avatar'), env('PROFILE_IMAGE_PATH'), env('PROFILE_PREFIX'));
             $user->image = $avatar;
         } elseif ($user->image && $deleteAvatar) {
             $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));

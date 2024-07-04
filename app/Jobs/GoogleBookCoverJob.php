@@ -33,7 +33,7 @@ class GoogleBookCoverJob implements ShouldQueue
         if ($data['totalItems'] > 0) {
             $link = $data['items'][0]['volumeInfo']['imageLinks']['thumbnail'];
 
-            $filename = $imageHelper->uploadFromLink($link, env('BOOK_COVER_PATH'));
+            $filename = $imageHelper->uploadFromLink($link, env('BOOK_COVER_PATH'), env('BOOK_IMAGE_PREFIX'));
 
             if ($filename) {
                 $this->book->image()->save(Image::from($filename));

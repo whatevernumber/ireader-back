@@ -19,7 +19,7 @@ class ImageHelper extends FileHelper
      * @throws FileException
      * @throws \Exception
      */
-    public function uploadFromLink(string $link, string $folder): string
+    public function uploadFromLink(string $link, string $folder, string $prefix): string
     {
         $response = Http::get($link);
 
@@ -32,7 +32,7 @@ class ImageHelper extends FileHelper
                     throw new FileException('Недопустимый тип файла');
                 }
 
-                return $this->store($file, $folder);
+                return $this->store($file, $folder, $prefix);
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage());
             }
@@ -47,10 +47,10 @@ class ImageHelper extends FileHelper
      * @return string
      * @throws \Exception
      */
-    public function saveFromRequest(UploadedFile $file, string $folder): string
+    public function saveFromRequest(UploadedFile $file, string $folder, string $prefix): string
     {
         try {
-            $file = $this->store($file, $folder);
+            $file = $this->store($file, $folder, $prefix);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

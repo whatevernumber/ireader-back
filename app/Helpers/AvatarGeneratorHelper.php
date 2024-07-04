@@ -53,7 +53,7 @@ class AvatarGeneratorHelper
      */
     public function saveAvatar(mixed $avatar, string $folder)
     {
-        $name = uniqid('ibook_avatar') . '.' . 'svg';
+        $name = uniqid(env('GENERATED_AVATAR_PREFIX')) . '.' . 'svg';
         $path = $folder . DIRECTORY_SEPARATOR . $name;
 
         try {
