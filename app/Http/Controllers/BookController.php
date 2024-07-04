@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ImageUploadHelper;
+use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
 use App\Helpers\IsbnHelper;
 use App\Http\Requests\BookRequest;
@@ -120,7 +120,7 @@ class BookController extends Controller
      * @throws ValidationException
      * @throws Exception
      */
-    public function update(BookRequest $request, string $isbn, IsbnHelper $isbnHelper, ImageUploadHelper $imageHelper): BookResource
+    public function update(BookRequest $request, string $isbn, IsbnHelper $isbnHelper, ImageHelper $imageHelper): BookResource
     {
         $isbnChanged = false;
 
@@ -211,17 +211,6 @@ class BookController extends Controller
                 }
             }
 
-            // simpler but always detaches all the genres and adds it again
-//                $book->genres()->detach();
-//
-//                foreach ($data['genres'] as $selectedGenre) {
-//                    $genre = Genre::firstOrCreate([
-//                        'value' => $selectedGenre,
-//                    ]);
-//
-//                    $book->genres()->save($genre);
-//                }
-
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
@@ -243,7 +232,7 @@ class BookController extends Controller
      * @throws NotFoundHttpException
      * @throws Exception
      */
-    public function delete(string $isbn, ImageUploadHelper $imageHelper): Response
+    public function delete(string $isbn, ImageHelper $imageHelper): Response
     {
         // finds the book to change
         if (str_ends_with($isbn, 'X')) {

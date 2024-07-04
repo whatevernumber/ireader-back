@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -9,7 +10,7 @@ use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpFoundation\File\Exception\ExtensionFileException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-class ImageUploadHelper extends FileHelper
+class ImageHelper extends FileHelper
 {
     /**
      * @param $link string
@@ -41,13 +42,31 @@ class ImageUploadHelper extends FileHelper
     }
 
     /**
+     * @param UploadedFile $file
+     * @param string $folder
+     * @return string
+     * @throws \Exception
+     */
+    public function saveFromRequest(UploadedFile $file, string $folder): string
+    {
+        try {
+            $file = $this->store($file, $folder);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+
+        return $file;
+    }
+
+    /**
      * @inheritDoc
      * @throws ExtensionFileException
      * @throws UnableToWriteFile
      */
-    protected function store(mixed $file, string $folder): string
+    protected function store(mixed $file, string $folder, string $prefix): string
     {
-        $extension = $this->getExt($file);
+        $extension = $file instanceof UploadedFile ? $file->extension() : $this->getExt($file);
+        $name = uniqid($prefix . '.' . $extension);
 
         if (!$extension) {
             throw new ExtensionFileException('Ошибка получения расширения');
@@ -57,13 +76,19 @@ class ImageUploadHelper extends FileHelper
             throw new ExtensionFileException('Неверный тип расширения');
         }
 
-        $name = uniqid(env('BOOK_IMAGE_PREFIX')) . '.' . $extension;
-        $path = $folder . DIRECTORY_SEPARATOR . $name;
-
-        try {
-            Storage::disk('public')->put($path, $file);
-        } catch (\Exception $e) {
-            throw new UnableToWriteFile('Ошибка записи');
+        if ($file instanceof UploadedFile) {
+            try {
+                $file->storeAs($folder, $name);
+            } catch (\Exception $e) {
+                throw new UnableToWriteFile('Ошибка записи');
+            }
+        } else {
+            $path = $folder . DIRECTORY_SEPARATOR . $name;
+            try {
+                Storage::disk('public')->put($path, $file);
+            } catch (\Exception $e) {
+                throw new UnableToWriteFile('Ошибка записи');
+            }
         }
 
         return $name;

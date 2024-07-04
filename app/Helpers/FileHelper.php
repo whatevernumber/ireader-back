@@ -31,9 +31,10 @@ abstract class FileHelper
      * Saves the given file and returns its name
      * @param mixed $file
      * @param string $folder
+     * @param string $prefix
      * @return string
      */
-    abstract protected function store(mixed $file, string $folder): string;
+    abstract protected function store(mixed $file, string $folder, string $prefix): string;
 
     /**
      * Removes file at the given path

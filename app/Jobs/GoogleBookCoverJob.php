@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Helpers\GoogleBookApiService;
-use App\Helpers\ImageUploadHelper;
+use App\Helpers\ImageHelper;
 use App\Models\Book;
 use App\Models\Image;
 use Illuminate\Bus\Queueable;
@@ -26,7 +26,7 @@ class GoogleBookCoverJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(GoogleBookApiService $googleHelper, ImageUploadHelper $imageHelper): void
+    public function handle(GoogleBookApiService $googleHelper, ImageHelper $imageHelper): void
     {
         $data = $googleHelper->getData(['isbn' => $this->book->isbn]);
 

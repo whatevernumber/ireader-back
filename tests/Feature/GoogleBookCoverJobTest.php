@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Helpers\GoogleBookApiHelper;
-use App\Helpers\ImageUploadHelper;
+use App\Helpers\ImageHelper;
 use App\Jobs\GoogleBookCoverJob;
 use App\Models\Author;
 use App\Models\Book;
@@ -47,7 +47,7 @@ class GoogleBookCoverJobTest extends TestCase
             $mock->shouldReceive('getData')->andReturn($data);
         });
 
-        $mockImage = $this->mock(ImageUploadHelper::class, function (MockInterface $mock) use ($imageName) {
+        $mockImage = $this->mock(ImageHelper::class, function (MockInterface $mock) use ($imageName) {
            $mock->shouldReceive('uploadFromLink')->andReturn($imageName);
         });
 
