@@ -167,14 +167,15 @@ class BookController extends Controller
         try {
             $book->update($data);
 
-            // takes existing relationships and transform it to array to check if there were changes added
-            $authors = $book->authors()->pluck('name')->toArray();
-            $genres = $book->genres->pluck('value')->toArray();
-            Arr::flatten($authors);
-            Arr::flatten($genres);
+            // takes existing relationships compares them to collections of received genres/authors
+            $authors = $book->authors()->pluck('name')->flatten();
+            $genres = $book->genres()->pluck('value')->flatten();
+
+            $genreCollection = collect($data['authors']);
+            $authorCollection = collect($data['genres']);
 
             // if there are new authors added
-            if ($diff = array_diff($data['authors'], $authors)) {
+            if ($diff = $authorCollection->diff($authors)) {
                 foreach ($diff as $author) {
                     $author = Author::firstOrCreate([
                         'name' => $author,
@@ -185,7 +186,7 @@ class BookController extends Controller
             }
 
             // if some of old authors were erased
-            if ($diff = array_diff($authors, $data['authors'])) {
+            if ($diff = $authors->diff($authorCollection)) {
                 foreach ($diff as $author) {
                     $author = Author::where(['name' => $author])->first();
                     $book->authors()->detach($author->id);
@@ -193,7 +194,7 @@ class BookController extends Controller
             }
 
             // if there are new genres added
-            if ($diff = array_diff($data['genres'], $genres)) {
+            if ($diff = $genreCollection->diff($genres)) {
                 foreach ($diff as $genre) {
                     $genre = Genre::firstOrCreate([
                         'value' => $genre,
@@ -204,7 +205,7 @@ class BookController extends Controller
             }
 
             // if some of old genres were erased
-            if ($diff = array_diff($genres, $data['genres'])) {
+            if ($diff = $genres->diff($genreCollection)) {
                 foreach ($diff as $genre) {
                     $genre = Genre::where(['value' => $genre])->first();
                     $book->genres()->detach($genre->id);
