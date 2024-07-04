@@ -19,7 +19,7 @@ return new class extends Migration
             $table->tinyInteger('published_year');
             $table->integer('pages')->nullable();
             $table->timestamps();
-            $table->tinyInteger('rate')->default(0);
+            $table->tinyInteger('rate')->nullable();
 
             $table->index('title');
             $table->fullText('description');

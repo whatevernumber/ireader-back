@@ -89,6 +89,33 @@ class FinishedBookController extends Controller
         return response('', 200);
     }
 
+    public function update(ReadBookRequest $request, string $isbn) {
+
+        $user = $request->user();
+        $data = $request->validated();
+
+        if (str_ends_with($isbn, 'X')) {
+            $isbn = str_replace('X', '', $isbn);
+        }
+
+        if (!$book = Book::find($isbn)) {
+            throw new NotFoundHttpException('Такой книги не существует', null, 404);
+        }
+
+        $finishedBooks = $user->finishedBooks()->get();
+
+        if (!$finishedBooks->contains($book)) {
+            throw new ConflictHttpException('Книга не отмечена прочитанной', null, 409);
+        }
+
+        $user->finishedBooks()->updateExistingPivot($book->isbn, [
+           'rate' => $data['rate'],
+           'comment' => $data['comment'],
+        ]);
+
+        return response('', 200);
+    }
+
     /**
      * @throws NotFoundHttpException
      * @throws ConflictHttpException

@@ -5,10 +5,8 @@ namespace App\Notifications;
 use App\Models\Book;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Storage;
 
 class BookRead extends Notification implements ShouldQueue
 {

@@ -70,5 +70,6 @@ Route::middleware('auth:sanctum')->prefix('progress')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/completed', [\App\Http\Controllers\FinishedBookController::class, 'index']);
     Route::post('/completed/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'create']);
+    Route::patch('/completed/update/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'update']);
     Route::delete('/completed/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'delete']);
 });

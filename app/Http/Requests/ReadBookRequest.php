@@ -22,8 +22,16 @@ class ReadBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comment' => 'sometimes|string',
-            'rate' => 'sometimes|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+            'rate' => 'nullable|integer|min:1|max:5',
         ];
+    }
+
+    public function messages()
+    {
+        return [
+                'comment.string' => 'Отзыв должен содержать текст',
+                'rate.integer' => 'Рейтинг должен быть числом',
+            ];
     }
 }
