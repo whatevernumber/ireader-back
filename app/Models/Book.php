@@ -25,6 +25,19 @@ class Book extends Model
         'pages',
     ];
 
+    /**
+     * Updates model's rating
+     * @return void
+     */
+    public function calculateRate()
+    {
+        $rateCount = $this->finishedBy()->where('rate', '>', 0)->count();
+        $rateSum = $this->finishedBy()->where('rate', '>', 0)->sum('rate');
+        $this->rate = $rateSum / $rateCount;
+        $this->save();
+
+    }
+
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class);

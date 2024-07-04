@@ -113,7 +113,9 @@ class FinishedBookController extends Controller
            'comment' => $data['comment'],
         ]);
 
-        return response('', 200);
+        $book->calculateRate();
+
+        return response('', 201);
     }
 
     /**
