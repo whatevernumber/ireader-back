@@ -66,7 +66,7 @@ class ImageHelper extends FileHelper
     protected function store(mixed $file, string $folder, string $prefix): string
     {
         $extension = $file instanceof UploadedFile ? $file->extension() : $this->getExt($file);
-        $name = uniqid($prefix . '.' . $extension);
+        $name = uniqid($prefix) . '.' . $extension;
 
         if (!$extension) {
             throw new ExtensionFileException('Ошибка получения расширения');
@@ -76,16 +76,17 @@ class ImageHelper extends FileHelper
             throw new ExtensionFileException('Неверный тип расширения');
         }
 
+        $path = $folder . DIRECTORY_SEPARATOR;
+
         if ($file instanceof UploadedFile) {
             try {
-                $file->storeAs($folder, $name);
+                $file->storeAs($path, $name, 'public');
             } catch (\Exception $e) {
                 throw new UnableToWriteFile('Ошибка записи');
             }
         } else {
-            $path = $folder . DIRECTORY_SEPARATOR . $name;
             try {
-                Storage::disk('public')->put($path, $file);
+                Storage::disk('public')->put(($path . DIRECTORY_SEPARATOR . $name), $file);
             } catch (\Exception $e) {
                 throw new UnableToWriteFile('Ошибка записи');
             }

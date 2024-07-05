@@ -65,7 +65,10 @@ class UserController extends Controller
         $deleteAvatar = $data['delete_avatar'] ?? 0;
 
         if ($request->file('avatar')) {
-            $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));
+            if ($user->image) {
+                $imageHelper->delete($user->image, env('PROFILE_IMAGE_PATH'));
+            }
+
             $avatar = $imageHelper->saveFromRequest($request->file('avatar'), env('PROFILE_IMAGE_PATH'), env('PROFILE_PREFIX'));
             $user->image = $avatar;
         } elseif ($user->image && $deleteAvatar) {
