@@ -109,6 +109,16 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'manticore' => [
+            'driver' => 'mysql',
+            'host' => '127.0.0.1',
+            'port' => '9306',
+            'database' => null,
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true,
+            ]
+        ],
+
     ],
 
     /*

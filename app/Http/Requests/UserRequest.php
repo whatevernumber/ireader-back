@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|string',
             'birthday' => 'sometimes|date',
-            'avatar' => 'sometimes|image|extensions:jpg,jpeg|mimes:jpg'
+            'avatar' => 'nullable|image|extensions:jpg,jpeg|mimes:jpg'
         ];
     }
 

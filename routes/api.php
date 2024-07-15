@@ -73,3 +73,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/completed/update/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'update']);
     Route::delete('/completed/{isbn}', [\App\Http\Controllers\FinishedBookController::class, 'delete']);
 });
+
+Route::get('/query/{query}', [\App\Http\Controllers\BookController::class, 'searchManticore']);

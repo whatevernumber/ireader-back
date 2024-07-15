@@ -1,15 +1,16 @@
 {
-    "name": "laravel/laravel",
+    "name": "whatevernumber/ibook",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "A small book site",
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "bitverse/identicon": "^1.1",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "manticoresoftware/manticoresearch-php": "^3.1",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

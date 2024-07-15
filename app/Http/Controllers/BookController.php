@@ -11,7 +11,9 @@ use App\Jobs\GoogleBookCoverJob;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Image;
 use Exception;
+use http\Exception\BadMethodCallException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -19,6 +21,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Manticoresearch\Client;
+use Manticoresearch\Index;
+use PDO;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -309,12 +314,46 @@ class BookController extends Controller
             });
         }
 
-        $books = $books->paginate(env('BOOKS_PER_PAGE'));
+        $books = $books->get();
 
         if ($books->isEmpty()) {
             throw new NotFoundHttpException('Нет подходящих результатов', null, 404);
         }
 
         return BookResource::collection($books);
+    }
+
+    public function searchManticore(string $query): mixed
+    {
+//        $connection = new \PDO('mysql:host=127.0.0.1;port=9306');
+//        $prepare = $connection->prepare('SELECT id, title, name FROM ibooks WHERE MATCH(?)');
+//
+//        $prepare = $connection->prepare('SELECT id, title, name FROM ibooks  WHERE MATCH(?) FACET title DISTINCT id');
+//        $prepare->execute([$query]);
+//        return $prepare->fetchAll(PDO::FETCH_UNIQUE);
+//        return $prepare->fetchAll();
+
+
+//        $config = ['host' => '127.0.0.1','port' => 9308];
+//        $client = new Client($config);
+//        $index = $client->index('ibooks');
+//        $result = $index->search($query)->facet('title')->get();
+//
+//        $array = [];
+//
+//        foreach ($result as $res) {
+//            $array[] = [
+//                'title' => $res->title,
+//                'name' => $res->name,
+//                'isbn' => $res->getId(),
+//                'facet' => $res->facet
+//            ];
+//        }
+
+        $connection = DB::connection('manticore');
+        $result = $connection->table('ibooks')->selectRaw('id, title, name')->whereRaw("MATCH(?)", $query)
+                                    ->groupBy('id')->get();
+
+        return json_encode($result);
     }
 }
