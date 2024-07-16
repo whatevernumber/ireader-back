@@ -335,7 +335,11 @@ class BookController extends Controller
     public function getRandomBooks(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $completedBooks = Book::query()->select('isbn')->join('books_in_progress', 'isbn', '=', 'books_in_progress.book_isbn');
-        $allBooks = Book::query()->select('isbn')->join('finished_books', 'isbn', '=', 'finished_books.book_isbn')->union($completedBooks)->paginate(env('BOOKS_PER_PAGE'));
+        $allBooks = Book::query()->select('isbn')
+            ->join('finished_books', 'isbn', '=', 'finished_books.book_isbn')
+            ->union($completedBooks);
+
+        $allBooks = Book::query()->fromSub($allBooks, 'sub')->selectRaw('*')->inRandomOrder()->limit(5)->get();
 
         return BookResource::collection($allBooks);
     }
