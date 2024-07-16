@@ -326,9 +326,17 @@ class BookController extends Controller
     public function searchManticore(string $query): mixed
     {
         $connection = DB::connection('manticore');
-        $result = $connection->table('ireader')->selectRaw('id, title, name')->whereRaw("MATCH(?)", $query)
+        $result = $connection->table('ibooks')->selectRaw('id, title, name')->whereRaw("MATCH(?)", $query)
                                     ->groupBy('id')->get();
 
         return json_encode($result);
+    }
+
+    public function getRandomBooks(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    {
+        $completedBooks = Book::query()->select('isbn')->join('books_in_progress', 'isbn', '=', 'books_in_progress.book_isbn');
+        $allBooks = Book::query()->select('isbn')->join('finished_books', 'isbn', '=', 'finished_books.book_isbn')->union($completedBooks)->paginate(env('BOOKS_PER_PAGE'));
+
+        return BookResource::collection($allBooks);
     }
 }

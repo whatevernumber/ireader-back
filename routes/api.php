@@ -14,6 +14,7 @@ Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])-
 Route::prefix('books')->group(function () {
     Route::get('/search', [\App\Http\Controllers\BookController::class, 'find']);
     Route::get('/', [\App\Http\Controllers\BookController::class, 'index']);
+    Route::get('/random', [\App\Http\Controllers\BookController::class, 'getRandomBooks']);
     Route::get('/{isbn}', [\App\Http\Controllers\BookController::class, 'get']);
 
     Route::middleware(['auth:sanctum'])->post('/', [\App\Http\Controllers\BookController::class, 'create']);
