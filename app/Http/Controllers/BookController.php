@@ -334,8 +334,8 @@ class BookController extends Controller
 
     public function getRandomBooks(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $completedBooks = Book::query()->select('isbn')->join('books_in_progress', 'isbn', '=', 'books_in_progress.book_isbn');
-        $allBooks = Book::query()->select('isbn')
+        $completedBooks = Book::query()->selectRaw('isbn, title, description, pages, published_year, books.rate')->join('books_in_progress', 'isbn', '=', 'books_in_progress.book_isbn');
+        $allBooks = Book::query()->selectRaw('isbn, title, description, pages, published_year, books.rate')
             ->join('finished_books', 'isbn', '=', 'finished_books.book_isbn')
             ->union($completedBooks);
 
