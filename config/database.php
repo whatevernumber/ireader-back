@@ -111,7 +111,7 @@ return [
 
         'manticore' => [
             'driver' => 'mysql',
-            'host' => '89.191.225.149',
+            'host' => '127.0.0.1',
             'port' => '9306',
             'database' => null,
             'options' => [
