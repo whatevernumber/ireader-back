@@ -325,6 +325,31 @@ class BookController extends Controller
 
     public function searchManticore(string $query): mixed
     {
+//        $connection = new \PDO('mysql:host=127.0.0.1;port=9306');
+//        $prepare = $connection->prepare('SELECT id, title, name FROM ibooks WHERE MATCH(?)');
+//
+//        $prepare = $connection->prepare('SELECT id, title, name FROM ibooks  WHERE MATCH(?) FACET title DISTINCT id');
+//        $prepare->execute([$query]);
+//        return $prepare->fetchAll(PDO::FETCH_UNIQUE);
+//        return $prepare->fetchAll();
+
+
+//        $config = ['host' => '127.0.0.1','port' => 9308];
+//        $client = new Client($config);
+//        $index = $client->index('ibooks');
+//        $result = $index->search($query)->facet('title')->get();
+//
+//        $array = [];
+//
+//        foreach ($result as $res) {
+//            $array[] = [
+//                'title' => $res->title,
+//                'name' => $res->name,
+//                'isbn' => $res->getId(),
+//                'facet' => $res->facet
+//            ];
+//        }
+
         $connection = DB::connection('manticore');
         $result = $connection->table('ireader')->selectRaw('id, title, name')->whereRaw("MATCH(?)", $query)
                                     ->groupBy('id')->get();
