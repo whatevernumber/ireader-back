@@ -12,11 +12,13 @@ abstract class FileHelper
     const ALLOWED_MIME_TYPES = [
         'image/jpg',
         'image/jpeg',
+        'image/png',
     ];
 
     const ALLOWED_IMAGE_EXTENSIONS = [
         'jpg',
         'jpeg',
+        'png',
     ];
 
     /**
