@@ -326,8 +326,8 @@ class BookController extends Controller
     public function searchManticore(string $query): mixed
     {
         $connection = DB::connection('manticore');
-        $result = $connection->table('ibooks')->selectRaw('id, title, name')->whereRaw("MATCH(?)", $query)
-                                ->groupBy('id')->get();
+        $result = $connection->table('ireader')->selectRaw('id, title, name')->whereRaw("MATCH(?)", $query)
+                                    ->groupBy('id')->get();
 
         return json_encode($result);
     }
