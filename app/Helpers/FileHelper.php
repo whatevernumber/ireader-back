@@ -13,12 +13,14 @@ abstract class FileHelper
         'image/jpg',
         'image/jpeg',
         'image/png',
+        'image/svg',
     ];
 
     const ALLOWED_IMAGE_EXTENSIONS = [
         'jpg',
         'jpeg',
         'png',
+        'svg',
     ];
 
     /**

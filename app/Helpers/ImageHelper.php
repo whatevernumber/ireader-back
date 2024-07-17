@@ -63,7 +63,7 @@ class ImageHelper extends FileHelper
      * @throws ExtensionFileException
      * @throws UnableToWriteFile
      */
-    protected function store(mixed $file, string $folder, string $prefix): string
+    public function store(mixed $file, string $folder, string $prefix): string
     {
         $extension = $file instanceof UploadedFile ? $file->extension() : $this->getExt($file);
         $name = uniqid($prefix) . '.' . $extension;
