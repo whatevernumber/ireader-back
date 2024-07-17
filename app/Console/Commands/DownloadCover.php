@@ -24,8 +24,8 @@ class DownloadCover extends Command
     /**
      * Execute the console command.
      */
-    public function handle(BookCoverJob $job)
+    public function handle()
     {
-        $job::dispatch();
+        BookCoverJob::dispatch();
     }
 }

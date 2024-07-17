@@ -33,13 +33,13 @@ class BookCoverJob implements ShouldQueue
 
         if ($links->isNotEmpty()) {
             foreach ($links as $link) {
-                $exists = Image::where('book_isbn', $link->book_isbn)->first();
-                if (!$exists) {
+
+                if (Image::where('book_isbn', $link->book_isbn)->doesntExist()) {
                     $filename = $imageHelper->uploadFromLink($link->link, env('BOOK_COVER_PATH'), env('BOOK_IMAGE_PREFIX'));
                     if ($filename) {
-                            $image = Image::from($filename);
-                            $image->book_isbn = $link->book_isbn;
-                            $image->save();
+                        $image = Image::from($filename);
+                        $image->book_isbn = $link->book_isbn;
+                        $image->save();
                     }
                 }
                 DB::table('book_cover_links')->where('link', $link->link)->delete();
