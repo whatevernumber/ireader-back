@@ -1,4 +1,4 @@
-## iBook
+## iReader
 
 RESTful API for a book store. 
 
