@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'admin' => $this->is_admin,
             'bonus' => $this->bonus,
             'avatar' => $this->image,
+            'email_verified' => $this->whenNotNull($this->email_verified_at),
             'token' => $this->whenNotNull($this->token),
             'favourites_count' => $this->whenNotNull($this->favourites_count),
             'progress_count' => $this->whenNotNull($this->onread_count),

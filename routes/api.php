@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\VerifyEmailController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -76,3 +79,13 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/query/{query}', [\App\Http\Controllers\BookController::class, 'searchManticore']);
+
+Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verifyEmail'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
+// Resend link to verify email
+Route::post('/email/verify/resend', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return Response::json(['success' => true], 201);
+})->middleware(['auth:sanctum', 'throttle:1,30'])->name('verification.send');
